@@ -1,3 +1,5 @@
+import 'package:estadosapp/models/usuario.dart';
+import 'package:estadosapp/services/usuario_service.dart';
 import 'package:flutter/material.dart';
 
 class Pagina1Page extends StatelessWidget {
@@ -7,7 +9,16 @@ class Pagina1Page extends StatelessWidget {
       appBar: AppBar(
         title: Text("Pagina 1"),
       ),
-      body: InformacionUsuario(),
+      body: StreamBuilder(
+        stream: usuarioService.usuarioStream,
+        builder: (BuildContext context, AsyncSnapshot<Usuario> snapshot) {
+          return snapshot.hasData
+              ? InformacionUsuario(usuarioService.usuario)
+              : Center(
+                  child: Text("No hay informacion"),
+                );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.play_arrow),
         onPressed: () {
@@ -19,6 +30,9 @@ class Pagina1Page extends StatelessWidget {
 }
 
 class InformacionUsuario extends StatelessWidget {
+  final Usuario usuario;
+
+  const InformacionUsuario(this.usuario);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -34,10 +48,10 @@ class InformacionUsuario extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            title: Text("Nombre"),
+            title: Text(usuario.nombre),
           ),
           ListTile(
-            title: Text("Edad"),
+            title: Text(usuario.edad.toString()),
           ),
           Text(
             "Profesiones",
